@@ -20,6 +20,14 @@ import {
 } from './utils';
 import LandingPage from './components/LandingPage';
 
+
+const MyLandingPage = (props) => {
+  const { appConfig } = props;
+
+  return (<p>Aupa penya tios</p>);
+
+};
+
 const globalSearchConfig = {
   title: 'Global search and catalogue',
   layoutComponent: 'RightColumnLayout',
@@ -490,6 +498,107 @@ export default function install(config) {
       label: 'Origin of the measure',
     }),
   ];
+
+
+  const kontrata_config = {
+    host: 'http://localhost:9200',
+    elastic_index: 'contracts',
+    facets: [
+      suiFacet({ field: 'contratacion_ambito_geografico.valor', isFilterable: true, isMulti: true }),
+      // suiFacet({ field: 'Sector', isMulti: true }),
+      // suiFacet({ field: 'Use_or_activity', label: 'Use or activity' }),
+    ],
+    // highlight: {
+    //   fields: {
+    //     Measure_name: {},
+    //   },
+    // },
+    sortOptions: [
+      {
+        name: 'contratacion_titulo_contrato',
+        value: 'Titulo',
+        direction: 'asc',
+      },
+    ],
+    tableViewParams: {
+      columns: [
+        {
+          title: 'Titulo',
+          field: 'contratacion_titulo_contrato',
+        },
+        {
+          title: 'Expediente',
+          field: 'contratacion_expediente',
+        },
+        {
+          title: 'Entidad',
+          field: 'contratacion_poder_adjudicador.valor',
+        },
+
+      ],
+    },
+    listingViewParams: {
+      titleField: 'contratacion_titulo_contrato',
+      // urlField: 'CodeCatalogue',
+      extraFields: [
+        {
+          title: 'Expediente',
+          field: 'contratacion_expediente',
+        },
+        {
+          title: 'Entidad',
+          field: 'contratacion_poder_adjudicador.valor',
+        },
+      ],
+      details: {
+        titleField: 'contratacion_titulo_contrato',
+        extraFields: [
+        {
+          title: 'Expediente',
+          field: 'contratacion_expediente',
+        },
+        {
+          title: 'Entidad',
+          field: 'contratacion_poder_adjudicador.valor',
+        },
+        ],
+
+      },
+    },
+    horizontalCardViewParams: {
+      titleField: "contratacion_titulo_contrato"
+    },
+    cardViewParams: {
+      titleField: "contratacion_titulo_contrato"
+    },
+    download_fields:  [
+        {
+          title: 'Expediente',
+          field: 'contratacion_expediente',
+        },
+        {
+          title: 'Entidad',
+          field: 'contratacion_poder_adjudicador.valor',
+        },
+
+    ],
+    enableNLP: false,
+    autocomplete: {
+      results: null,
+      suggestions: null
+    },
+    extraQueryParams: {
+    text_fields: [
+      'contratacion_titulo_contrato^2',
+      ],
+    },
+    initialView: {
+      component: MyLandingPage
+    },
+
+  };
+
+  config.searchui.kontrata = mergeConfig(kontrata_config, envConfig);
 
   return config;
 }
